@@ -8,7 +8,52 @@
       "role": "customer"
     }
   ],
-  "carts": [],
+  "carts": [
+    {
+      "id": 2,
+      "name": "dolorem",
+      "description": "Amet vero aut perferendis tempore impedit.",
+      "category": "odio",
+      "price": 31.38,
+      "stock": 49,
+      "discount": 9,
+      "rating": 3,
+      "status": "available",
+      "created_at": "2025-07-10T11:12:43.000000Z",
+      "updated_at": "2025-07-10T11:12:43.000000Z",
+      "images": {
+        "id": 2,
+        "url": "https://via.placeholder.com/640x480.png/0066cc?text=products+dolores",
+        "created_at": "2025-07-10T11:12:43.000000Z",
+        "updated_at": "2025-07-10T11:12:43.000000Z",
+        "product_id": 2
+      },
+      "quantity": 1,
+      "userId": null
+    },
+    {
+      "id": 1,
+      "name": "debitis",
+      "description": "Inventore inventore quis beatae numquam id laboriosam delectus.",
+      "category": "vel",
+      "price": 70.88,
+      "stock": 67,
+      "discount": 14,
+      "rating": 2,
+      "status": "available",
+      "created_at": "2025-07-10T11:12:43.000000Z",
+      "updated_at": "2025-07-10T11:12:43.000000Z",
+      "images": {
+        "id": 1,
+        "url": "https://via.placeholder.com/640x480.png/0000ee?text=products+quidem",
+        "created_at": "2025-07-10T11:12:43.000000Z",
+        "updated_at": "2025-07-10T11:12:43.000000Z",
+        "product_id": 1
+      },
+      "quantity": 1,
+      "userId": null
+    }
+  ],
   "orders": [],
   "products": [
     {
