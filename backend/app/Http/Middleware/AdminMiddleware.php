@@ -16,7 +16,9 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::check() && Auth::user()->role === 'admin') {
+        $user = $request->user(); // Get the authenticated user from the request (works with Sanctum)
+        // Check if the user is authenticated and has the 'admin' role
+        if($user && $user->role === 'admin') {
             return $next($request);
         }
         abort(403, 'Unauthorized');

@@ -13,13 +13,10 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id'); // Foreign key to users table
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key to users table
             $table->string('status')->default('pending'); // Order status
             $table->decimal('total_amount', 10, 2); // Total amount for
             $table->timestamps();
-
-            // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

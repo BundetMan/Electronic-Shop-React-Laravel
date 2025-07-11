@@ -7,8 +7,8 @@ const CartListProduct = ({ cart }) => {
     <div className="p-6">
       <div className="flex gap-4">
         <img
-          src={cart.images}
-          alt=""
+          src={cart.product?.images?.[0]?.url || "/placeholder.png"}
+          alt={cart.name || "Product Image"}
           className="w-20 h-20 rounded-md object-cover border"
         />
         <div className="flex-1">
@@ -17,7 +17,7 @@ const CartListProduct = ({ cart }) => {
               <h3 className="font-semibold text-gray-900">
                 {cart.name}
               </h3>
-              <p className="text-sm text-gray-600">Category: {cart.category}</p>
+              <p className="text-sm text-gray-600">Category: {cart.product.category}</p>
               <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold text-white bg-black hover:bg-primary/80 mt-1">
                 {cart.stock > 0 ? "In Stock" : "Out of Stock"}
               </span>
@@ -42,7 +42,7 @@ const CartListProduct = ({ cart }) => {
               {cart.discount > 0 ? (
                 <>
                   <div className="font-semibold text-gray-900">
-                    ${cart.price - cart.price * cart.discount / 100}
+                    ${(cart.price - cart.price * cart.discount / 100)?.toFixed(2)}
                   </div>
                   <div className="text-sm text-gray-500 line-through">
                     ${cart.price}

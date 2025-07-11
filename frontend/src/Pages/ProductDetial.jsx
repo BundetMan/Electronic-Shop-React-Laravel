@@ -23,7 +23,7 @@ const ProductDetial = () => {
           <div className="">
             <div className="border-2 rounded-lg overflow-hidden mb-4">
               <img
-                src={productDetail.images[activeImage]}
+                src={productDetail.images?.[activeImage]?.url || "/placeholder.png"}
                 alt=""
                 className="w-full h-96 object-contain rounded-lg mix-blend-multiply"
               />
@@ -38,7 +38,7 @@ const ProductDetial = () => {
                   }`}
                 >
                   <img
-                    src={image}
+                    src={image?.url}
                     alt=""
                     className="w-full h-16 object-contain rounded-lg mix-blend-multiply"
                   />
@@ -69,7 +69,7 @@ const ProductDetial = () => {
                     })}
                   </div>
                   <div className="text-gray-600">
-                    {productDetail.rate.toFixed(1)}
+                    {productDetail.rate?.toFixed(1)}
                   </div>
                 </div>
                 <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors bg-black text-white hover:bg-primary/80">

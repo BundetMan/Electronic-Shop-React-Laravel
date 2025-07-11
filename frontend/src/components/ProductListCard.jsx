@@ -3,15 +3,21 @@ import { Link } from 'react-router-dom';
 import { CartContext } from '../context/CartProvider';
 
 const ProductListCard = ({product, showStyle}) => {
-const {addToCart} = useContext(CartContext)
+  const {addToCart} = useContext(CartContext);
+
+  // Safely handle price as a number
+  const price = Number(product.price) || 0;
+  const discount = Number(product.discount) || 0;
+  const discountedPrice = price - (price * discount / 100);
+
   return (
     <div className="group rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-lg transition-shadow">
         <div className={`p-4 ${showStyle === "list" && "flex gap-3 items-center"}`}>
             <div className="relative mb-2 bg-slate-100 rounded-sm">
-                <img src={product.images[0]} alt="" className={`group-hover:scale-110 transition-all w-full ${showStyle == "grid" ? "h-48" : "h-36"} object-contain rounded-lg mix-blend-multiply`} />
+                <img src={product.images?.[0]?.url || "/placeholder.png"} alt={product.name} className={`group-hover:scale-110 transition-all w-full ${showStyle == "grid" ? "h-48" : "h-36"} object-contain rounded-lg mix-blend-multiply`} />
                 {product.discount > 0 && <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 absolute top-2 left-2 bg-blue-600 text-white">{product.discount}% OFF</div>}
                 <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:text-accent-foreground h-9 w-9 absolute top-2 right-2 bg-white/80 hover:bg-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart w-4 h-4"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-heart w-4 h-4"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 </button>
             </div>
             <div className="flex-1">
@@ -22,7 +28,7 @@ const {addToCart} = useContext(CartContext)
                 <div className="flex items-center mb-1">
                     <div className="flex text-yellow-400 mr-1 text-sm">
                         {Array.from({ length: 5 }).map((_, idx) => {
-                            const rate = product.rate;
+                            const rate = product.rating;
                             if (rate >= idx + 1) {
                                 // Full star
                                 return <i key={idx} className="bx bxs-star"></i>;
@@ -35,22 +41,22 @@ const {addToCart} = useContext(CartContext)
                             }
                         })}
                     </div>
-                    <p className="text-sm text-gray-500">{product.rate.toFixed(1)}</p>
+                    <p className="text-sm text-gray-500">{product.rate}</p>
                 </div>
                 <div className="flex items-center justify-between">
                     <div className="">
-                        {product.discount > 0 ? (
+                        {discount > 0 ? (
                             <>
                                 <span className="text-sm font-bold text-gray-900">
-                                    ${product.price - (product.price * product.discount / 100)}
+                                    ${discountedPrice.toFixed(2)}
                                 </span>
                                 <span className="text-[11px] text-gray-500 line-through ml-2">
-                                    ${product.price}
+                                    ${price.toFixed(2)}
                                 </span>
                             </>
                             ) : (
                             <span className="text-lg font-bold text-gray-900">
-                                ${product.price}
+                                ${price.toFixed(2)}
                             </span>
                         )}
                     </div>

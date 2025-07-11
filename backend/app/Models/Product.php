@@ -14,10 +14,17 @@ class Product extends Model
         'category',
         'price',
         'stock',
-        'image',
         'discount',
         'rating',
         'status'
+    ];
+
+    protected $casts = [
+        'price' => 'float',
+        'stock' => 'integer',
+        'discount' => 'float',
+        'rating' => 'float',
+        'status' => 'string'
     ];
 
     public function orders()
@@ -27,5 +34,9 @@ class Product extends Model
     public function carts()
     {
         return $this->belongsToMany(CartItem::class)->withPivot('quantity');
+    }
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id');
     }
 }

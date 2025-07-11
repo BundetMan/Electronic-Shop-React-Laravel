@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { ProductContext } from "./ProductProvider";
+import { toast } from "react-toastify";
 
 export const CartContext = createContext();
 
@@ -11,108 +12,152 @@ const CartProvider = ({ children }) => {
   const [totalAmount, setTotalAmount] = useState(0);
 
   const fetchCartItems = async () => {
+    const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`http://localhost:3000/carts`);
+      const response = await fetch(`http://localhost:8000/api/cart`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Accept": "application/json",
+        }
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch cart items");
       }
+
       const data = await response.json();
       setCarts(data);
-      setTotalItems(data.reduce((acc, item) => acc + item.quantity, 0));
-      setTotalPrice(
-        data.reduce(
-          (acc, item) =>
-            acc +
-            (item.price * item.quantity -
-              (item.price * item.quantity * item.discount) / 100),
-          0
-        )
-      );
-      setTotalAmount(
-        data.reduce(
-          (acc, item) =>
-            acc +
-            (item.price * item.quantity -
-              (item.price * item.quantity * item.discount) / 100),
-          0
-        )
-      );
+      
+      const totalQty = data.reduce((acc, item) => acc + item.quantity, 0);
+      setTotalItems(totalQty);
+
+      const totalPrice = data.reduce((acc, item) => {
+        const price = item.price;
+        const qty = item.quantity;
+        const discount = item.discount ?? item.product?.discount ?? 0; // Use product discount if available
+
+        const  finalPrice = price * qty - (price * qty * discount)/ 100;
+        return acc + finalPrice;
+      }, 0);
+
+      setTotalPrice(totalPrice);
+      setTotalAmount(totalPrice);
     } catch (error) {
-      console.log(error);
+      toast.error("Failed to fetch cart items.");
+      console.log("Error fetching cart items:", error);
     }
   };
 
-  const userId = localStorage.getItem("id");
   const addToCart = async (id, qty) => {
-    const resChecking = await fetch(`http://localhost:3000/carts/${id}`);
-    if (resChecking.ok) {
-      const data = await resChecking.json();
-      const newProductData = { ...data, quantity: data.quantity + qty };
-
-      await fetch(`http://localhost:3000/carts/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newProductData),
-      });
-      fetchCartItems();
-    } else {
-      // add to cart
-      const productToAdd = allProducts.find((pro) => pro.id == id);
-
-      await fetch(`http://localhost:3000/carts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...productToAdd,
-          images: productToAdd.images[0],
-          quantity: qty,
-          userId
-        }),
-      });
-      fetchCartItems();
+    const token = localStorage.getItem("token");
+    try{
+      const existingItem = carts?.find(item => item.product_id === id);
+      if (existingItem) {
+        const newQty = existingItem.quantity + qty;
+        await fetch(`http://localhost:8000/api/cart/${existingItem.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            quantity: newQty,
+          }),
+        });
+      } else {
+        await fetch("http://localhost:8000/api/cart", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            product_id: id,
+            quantity: qty,
+          }),
+        });
+      }
+      await fetchCartItems();
+      toast.success("Product added to cart successfully!");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Failed to add product to cart.");
     }
   };
 
   const removeCartItem = async (id) => {
+    const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`http://localhost:3000/carts/${id}`, {
+      const response = await fetch(`http://localhost:8000/api/cart/${id}`, {
         method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
       });
       if (!response.ok) {
         throw new Error("Failed to remove cart item");
       }
-      fetchCartItems();
+      await fetchCartItems();
+      toast.success("Product removed from cart successfully!");
     } catch (error) {
+      toast.error("Failed to remove product from cart.");
       console.log(error);
     }
   };
 
   const updateCartItem = async (id, quantity) => {
+    const token = localStorage.getItem("token");
     const cartItem = carts.find((item) => item.id === id);
-    if (!cartItem) {
-      throw new Error("Cart item not found");
-    }
+
     try {
-      const response = await fetch(`http://localhost:3000/carts/${id}`, {
-        method: "PATCH",
+      const response = await fetch(`http://localhost:8000/api/cart/${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
-          ...cartItem,
-          quantity,
+          quantity
         }),
       });
       if (!response.ok) {
         throw new Error("Failed to update cart item");
       }
-      fetchCartItems();
+      await fetchCartItems();
+      toast.success("Cart item updated successfully!");
     } catch (error) {
+      toast.error("Failed to update cart item.");
       console.log(error);
+    }
+  };
+
+  const handleCheckout = async () => {
+    const token = localStorage.getItem("token");
+
+    try{
+      const response = await fetch("http://localhost:8000/api/orders", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+
+      if(!response.ok) {
+        throw new Error("Failed to create order");
+      }
+
+      const data = await response.json();
+      console.log("Order placed", data);
+      toast.success("Order placed successfully!");
+
+      setCarts([]);
+      setTotalItems(0);
+      setTotalPrice(0);
+      setTotalAmount(0);
+    }
+    catch (error) {
+      console.error("Error placing order:", error);
+      toast.error("Failed to place order.");
     }
   };
 
@@ -130,7 +175,8 @@ const CartProvider = ({ children }) => {
           totalAmount,
           removeCartItem,
           updateCartItem,
-          addToCart
+          addToCart,
+          handleCheckout,
         }}
       >
         {children}

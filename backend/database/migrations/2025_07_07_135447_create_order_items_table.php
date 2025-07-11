@@ -16,7 +16,7 @@ return new class extends Migration
             // Foreign key constraints
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade'); // Foreign key to orders table
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade'); // Foreign key to products table
-            $table->integer('quantity')->default(1); // Quantity of the product in the order
+            $table->integer('quantity'); // Quantity of the product in the order
             $table->decimal('price', 10, 2); // Price of the product at the time of order
             $table->timestamps();            
         });

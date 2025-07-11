@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
-  const [allProducts, setAllProduct] = useState(null);
+  const [allProducts, setAllProduct] = useState([]);
   const [products, setProducts] = useState(null);
   const [sortValue, setSortValue] = useState("");
   const [productDetail, setProductDetail] = useState(null);
@@ -16,13 +16,13 @@ const ProductProvider = ({ children }) => {
 
   const fetchProduct = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/products?${sortValue}`);
+      const res = await fetch(`http://localhost:8000/api/products?${sortValue}`);
       if (!res.ok) {
         throw new Error("Failed to fetch product.");
       }
       const data = await res.json();
-      setProducts(data);
-      setAllProduct(data);
+      setProducts(data.products.data);
+      setAllProduct(data.products.data);
     } catch (error) {
       console.log(error.message);
     }
@@ -54,7 +54,7 @@ const ProductProvider = ({ children }) => {
 
   const fetchProductDetail = async (id) => {
     try {
-      const res = await fetch(`http://localhost:3000/products/${id}`);
+      const res = await fetch(`http://localhost:8000/api/products/${id}`);
       if (!res.ok) {
         throw new Error("Failed to fetch product detail.");
       }

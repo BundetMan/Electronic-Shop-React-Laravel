@@ -5,7 +5,7 @@ import { CartContext } from "../context/CartProvider";
 import { ProductContext } from "../context/ProductProvider";
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, user } = useContext(AuthContext);
   const { totalItems } = useContext(CartContext);
   const { handleSearch } = useContext(ProductContext);
   const [searchInput, setSearchInput] = useState("");
@@ -72,6 +72,14 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <>
+              {user?.role === "admin" && (
+                <Link
+                  to={"/admin/dashboard"}
+                  className="text-sm text-gray-700 hover:text-blue-600 px-2 py-3"
+                >
+                  Admin Dashboard
+                </Link>
+              )}
               <button>
                 <i className="bx bx-heart text-gray-700 text-xl"></i>
               </button>

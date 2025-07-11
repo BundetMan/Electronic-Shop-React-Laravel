@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'stateful' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class, // Ensure you have the correct middleware for authentication
+            'auth' => \Illuminate\Auth\Middleware\Authenticate::class, // Default authentication middleware
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

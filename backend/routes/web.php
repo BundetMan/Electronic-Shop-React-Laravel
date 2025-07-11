@@ -9,3 +9,5 @@ Route::get('/', function () {
 Route::middleware(['auth','admin'])->group(function () {
     Route::get('/admin', fn() => 'Admin Dashboard');
 });
+
+

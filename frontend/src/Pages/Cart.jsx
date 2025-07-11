@@ -4,7 +4,7 @@ import CartListProduct from "../components/CartListProduct";
 import { CartContext } from "../context/CartProvider";
 
 const Cart = () => {
-  const { carts, totalItems, totalPrice, totalAmount } =
+  const { carts, totalItems, totalPrice, totalAmount, handleCheckout } =
     useContext(CartContext);
   return (
     <div>
@@ -48,15 +48,16 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${totalPrice}</span>
+                  <span>${totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="shrink-0 bg-gray-500 h-[1px] w-full"></div>
                 <div className="flex justify-between font-semibold text-lg">
                   <span>Total</span>
-                  <span>${totalAmount}</span>
+                  <span>${totalAmount.toFixed(2)}</span>
                 </div>
                 <div className="space-y-3 pt-4">
-                  <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium bg-gray-900 text-white hover:bg-primary/90 h-11 rounded-md px-8 w-full">
+                  <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium bg-gray-900 text-white hover:bg-primary/90 h-11 rounded-md px-8 w-full"
+                  onClick={handleCheckout}>
                     Checkout
                   </button>
                 </div>

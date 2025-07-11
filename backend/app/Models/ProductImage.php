@@ -10,11 +10,16 @@ class ProductImage extends Model
     protected $table = 'product_images'; // Specify the table name if it differs from the
 
     public function product(){
-        return $this->belongsTo(product::class, 'product_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
-    public function images()
+    public function getUrlAttribute($value)
     {
-        return $this->hasMany(ProductImage::class, 'product_id');
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+        // It's a full URL already, return as is
+        return $value;
+        }
+        // Assuming the URL is stored as a relative path, you can prepend the base URL
+        return asset('storage/' . ltrim($value, '/'));
     }
 }

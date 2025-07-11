@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('category')->nullable();
             $table->decimal('price', 10, 2);
             $table->integer('stock')->default(0);
-            $table->string('image')->nullable();
             $table->integer('discount')->default(0); // Assuming you want a discount field
             $table->integer('rating')->default(0); // Assuming you want a rating field
             $table->string('status')->default('available'); // Assuming you want a status field

@@ -228,10 +228,10 @@ const Product = () => {
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke={showStyle == "grid" ? "white" : "black"}
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="lucide lucide-grid3x3 w-4 h-4"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-grid3x3 w-4 h-4"
                     >
                       <rect width="18" height="18" x="3" y="3" rx="2" />
                       <path d="M3 9h18" />
@@ -253,10 +253,10 @@ const Product = () => {
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke={showStyle == "list" ? "white" : "black"}
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="lucide lucide-list w-4 h-4"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-list w-4 h-4"
                     >
                       <path d="M3 12h.01" />
                       <path d="M3 18h.01" />
